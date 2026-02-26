@@ -37,9 +37,10 @@ const updateDashboardData = async (nurses: readonly Nurse[]) => {
   try {
     console.log("Starting dashboard update for", nurses.length, "nurses");
     const deployedCount = nurses.length;
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
 
     // Update metrics - increment deployed nurses
-    const metricsRes = await fetch("/api/metrics");
+    const metricsRes = await fetch(`${baseUrl}/api/metrics`);
     const metricsData = await metricsRes.json();
     console.log("Metrics data:", metricsData);
 
@@ -55,7 +56,7 @@ const updateDashboardData = async (nurses: readonly Nurse[]) => {
         const newValue = currentValue + deployedCount;
         console.log("Updating deployed from", currentValue, "to", newValue);
 
-        await fetch(`/api/metrics/${deployedMetric.id}`, {
+        await fetch(`${baseUrl}/api/metrics/${deployedMetric.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ value: String(newValue) }),
@@ -78,7 +79,7 @@ const updateDashboardData = async (nurses: readonly Nurse[]) => {
           newValue,
         );
 
-        await fetch(`/api/metrics/${neededMetric.id}`, {
+        await fetch(`${baseUrl}/api/metrics/${neededMetric.id}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ value: String(newValue) }),
@@ -87,7 +88,7 @@ const updateDashboardData = async (nurses: readonly Nurse[]) => {
     }
 
     // Update units - increase staffed percentage based on specialty
-    const unitsRes = await fetch("/api/units");
+    const unitsRes = await fetch(`${baseUrl}/api/units`);
     const unitsData = await unitsRes.json();
     console.log("Units data:", unitsData);
 
@@ -120,7 +121,7 @@ const updateDashboardData = async (nurses: readonly Nurse[]) => {
             `Updating unit ${unit.name}: current ${unit.current} -> ${newCurrent}, needed ${unit.needed} -> ${newNeeded}, staffed ${unit.staffed}% -> ${newStaffed}%`,
           );
 
-          await fetch(`/api/units/${unit.id}`, {
+          await fetch(`${baseUrl}/api/units/${unit.id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -135,7 +136,7 @@ const updateDashboardData = async (nurses: readonly Nurse[]) => {
 
     // Add activity
     console.log("Adding activity");
-    const activityRes = await fetch("/api/activities", {
+    const activityRes = await fetch(`${baseUrl}/api/activities`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -77,7 +77,8 @@ export function useApiData<T extends ApiItem>(endpoint: string): UseApiDataResul
       setLoading(true);
       setError(null);
 
-      const res = await fetch(`/api/${endpoint}`, {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+      const res = await fetch(`${baseUrl}/api/${endpoint}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -117,7 +118,8 @@ export function useApiData<T extends ApiItem>(endpoint: string): UseApiDataResul
       try {
         setError(null);
 
-        const res = await fetch(`/api/${endpoint}`, {
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const res = await fetch(`${baseUrl}/api/${endpoint}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(item)
@@ -159,7 +161,8 @@ export function useApiData<T extends ApiItem>(endpoint: string): UseApiDataResul
       try {
         setError(null);
 
-        const res = await fetch(`/api/${endpoint}/${id}`, {
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const res = await fetch(`${baseUrl}/api/${endpoint}/${id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updates)
@@ -205,7 +208,8 @@ export function useApiData<T extends ApiItem>(endpoint: string): UseApiDataResul
       try {
         setError(null);
 
-        const res = await fetch(`/api/${endpoint}/${id}`, {
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const res = await fetch(`${baseUrl}/api/${endpoint}/${id}`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' }
         });
